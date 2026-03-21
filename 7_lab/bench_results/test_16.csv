@@ -1,0 +1,10 @@
+filesystem,test_id,test_name,seconds
+ext2,16,write_single_500MiB,1.287494
+ext3,16,write_single_500MiB,6.849073
+ext4,16,write_single_500MiB,7.019215
+xfs,16,write_single_500MiB,7.029930
+btrfs,16,write_single_500MiB,1.398526
+zfs,16,write_single_500MiB,1.800506
+reiser,16,write_single_500MiB,4.181649
+fat32,16,write_single_500MiB,7.196350
+ntfs,16,write_single_500MiB,16.062412

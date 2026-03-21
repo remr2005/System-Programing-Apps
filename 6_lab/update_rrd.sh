@@ -1,7 +1,4 @@
 #!/bin/bash
-# update_rrd.sh IFACE
-# Обновляет кольцевую БД /home/kemran/System-Programing-Apps/6_lab/eth0.rrd
-# текущими счётчиками байт на интерфейсе.
 
 IFACE="$1"
 
@@ -12,7 +9,6 @@ fi
 
 RRD="/home/kemran/System-Programing-Apps/6_lab/eth0.rrd"
 
-# Читаем счётчики напрямую из /proc/net/dev, как в iface_stats.sh
 LINE=$(grep "$IFACE" /proc/net/dev | awk -F":" 'NR==1 {print $2}')
 
 if [ -z "$LINE" ]; then
