@@ -119,38 +119,41 @@ bench_18_write_large_sync() {
   append_csv "$(fs_label "$m")" "18" "write_single_${LARGE_MB}MiB_plus_sync" "$(elapsed "$t0" "$t1")"
 }
 
-# --- 19: >=1000 подкаталогов, замер времени создания ---
 bench_19_mkdir_tree() {
   local m="$1"
-  local root="$m/bench19_tree_$$"
+  local root="$m/bench_tree_$$"
+  local t0 t1 a b c
+
   mkdir -p "$root"
-  local t0 t1 i
   t0=$(now_sec)
-  for ((i = 0; i < TREE_DIRS; i++)); do
-    mkdir "$root/d$(printf '%04d' "$i")"
+  for a in $(seq -w 0 9); do
+    mkdir -p "$root/L1_$a"
+    for b in $(seq -w 0 9); do
+      mkdir -p "$root/L1_$a/L2_$b"
+      for c in $(seq -w 0 9); do
+        mkdir -p "$root/L1_$a/L2_$b/L3_$c"
+      done
+    done
   done
   t1=$(now_sec)
-  append_csv "$(fs_label "$m")" "19" "mkdir_${TREE_DIRS}_subdirs" "$(elapsed "$t0" "$t1")"
-  rm -rf "$root"
+
+  echo "needle" > "$root/L1_04/L2_02/L3_07/needle.txt"
+  append_csv "$(fs_label "$m")" "19" "mkdir_tree_3levels_1110dirs" "$(elapsed "$t0" "$t1")"
 }
 
-# --- 20: поиск по структуре (find) ---
 bench_20_search() {
   local m="$1"
-  local root="$m/bench20_tree_$$"
-  mkdir -p "$root"
-  local i
-  for ((i = 0; i < TREE_DIRS; i++)); do
-    mkdir "$root/d$(printf '%04d' "$i")"
-  done
-  echo "needle" >"$root/d0420/needle.txt"
-
+  local root="$m/bench_tree_$$"
   local t0 t1
+
+  [[ -d "$root" ]] || { echo "SKIP (нет дерева для поиска): $root" >&2; return 1; }
+
   t0=$(now_sec)
   find "$root" -name 'needle.txt' -print >/dev/null
   t1=$(now_sec)
+
+  append_csv "$(fs_label "$m")" "20" "find_in_existing_tree" "$(elapsed "$t0" "$t1")"
   rm -rf "$root"
-  append_csv "$(fs_label "$m")" "20" "find_needle_in_${TREE_DIRS}_dirs" "$(elapsed "$t0" "$t1")"
 }
 
 main() {
