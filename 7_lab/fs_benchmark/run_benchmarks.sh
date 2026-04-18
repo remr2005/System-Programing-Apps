@@ -3,6 +3,9 @@
 # Запуск: ./run_benchmarks.sh
 # Свои точки монтирования: FS_MOUNTS="/mnt/a /mnt/b" ./run_benchmarks.sh
 
+UUID="0539d18e-e97e-4675-9cab-9b0c57a2f0b5" TYPE="ext4"
+/dev/md1: UUID="a1bb11a8-1b89-435f-812b-d19818aef37d" TYPE="ext4"
+
 set -euo pipefail
 
 OUT_DIR="${OUT_DIR:-./bench_results}"
